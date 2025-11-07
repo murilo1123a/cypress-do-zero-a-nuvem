@@ -49,4 +49,37 @@ describe("Central de Atendimento ao Cliente TAT", () => {
     cy.get("@sendButton").click();
     cy.get(".error").should("be.visible");
   });
+
+  it("seleciona um produto (YouTube) por seu texto", () => {
+    let value = "youtube";
+    cy.get("select").select(value);
+    cy.get("select").should("have.value", value);
+  });
+
+  it("marca cada tipo de atendimento", () => {
+    cy.get("#email-checkbox").as("email").check();
+    cy.get("@email").should("be.checked");
+
+    cy.get("#phone-checkbox").as("phone").check();
+    cy.get("@phone").should("be.checked");
+  });
+
+  it("marca ambos checkboxes, depois desmarca o último", () => {
+    // marca ambos
+    cy.get("#check input").as("r").check();
+    // verifica ambos
+    cy.get("@r").first().should("be.checked");
+    cy.get("@r").last().should("be.checked");
+    // desmarca o ultimo e o verifica
+    cy.get("@r").last().uncheck();
+    cy.get("@r").last().should("not.be.checked");
+  });
+
+  it("seleciona um arquivo da pasta fixtures", () => {
+    cy.get("input[type='file']").as("fileInput").should("not.have.value");
+    cy.get("@fileInput").selectFile("cypress/fixtures/example.json");
+    cy.get("@fileInput").should((input) => {
+      expect(input[0].files[0].name).to.equal("example.json");
+    });
+  });
 });
