@@ -23,3 +23,23 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add(
+  "fillAllMandatoryFieldsAndSubmit",
+  (name, lastName, email, comment) => {
+    // digita campos
+    cy.get("#firstName").as("name").type(name);
+    cy.get("#lastName").type(lastName);
+    cy.get("#email").type(email);
+    cy.get("#open-text-area").as("commentSection").type(comment);
+    // valida campos
+    cy.get("@name").should("have.value", name);
+    cy.get("#lastName").should("have.value", lastName);
+    cy.get("#email").should("have.value", email);
+    cy.get("@commentSection").should("have.value", comment);
+    // envia formulario
+    cy.get(".button").as("sendButton");
+    cy.get("@sendButton").click();
+    cy.get(".success").should("be.visible");
+  }
+);
